@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Conversations{% endblock %}
+
+{% block body %}
+    <h3>Conversations</h3>
+
+    {% if conversations|length > 0 %}
+        <p>
+            <a href="{{ path('messages_start') }}">Start a conversation</a>
+        </p>
+
+        <table>
+            <thead>
+            <tr>
+                <th>#</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for conversation in conversations %}
+            <tr>
+                <td>{{ conversation.id }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>
+            You don't have any conversation.
+            <a href="{{ path('messages_start') }}">Don't hesitate to start one!</a>
+        </p>
+    {% endif %}
+{% endblock %}

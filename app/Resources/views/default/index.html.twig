@@ -1,3 +1,38 @@
 {% extends 'base.html.twig' %}
 
-{% block body %}{% endblock %}
+{% block title %}Welcome on the FOSMessage demo application!{% endblock %}
+
+{% block body %}
+    <p>
+        Welcome on the FOSMessage demo application!
+    </p>
+
+    {% if app.user %}
+        <p>
+            You are currently logged in as <strong>{{ app.user.username }}</strong>.
+        </p>
+        <p>
+            You can either :
+        </p>
+        <ul>
+            <li>
+                <a href="{{ path('fos_user_security_logout') }}">Log out to log in with another account</a>
+            </li>
+            <li>
+                <a href="{{ path('messages_conversations') }}">Access your inbox to start messaging</a>
+            </li>
+        </ul>
+    {% else %}
+        <p>
+            You are currently not logged in.
+        </p>
+        <p>
+            Some users are already configured for log in:
+            <a href="{{ path('fos_user_security_login') }}">you can try this demo quickly by using one of them to log in</a>.
+        </p>
+        <p>
+            If you want, you can also
+            <a href="{{ path('fos_user_registration_register') }}">create your own account by registering</a>.
+        </p>
+    {% endif %}
+{% endblock %}

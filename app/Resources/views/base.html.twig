@@ -32,6 +32,9 @@
                 <ul class="nav navbar-nav navbar-right">
                     {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                         <li>
+                            <a href="{{ path('messages_conversations') }}">Messages</a>
+                        </li>
+                        <li>
                             <a href="{{ path('fos_user_security_logout') }}">
                                 {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }}
                                 | {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}

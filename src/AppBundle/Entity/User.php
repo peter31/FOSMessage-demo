@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use FOS\Message\Model\PersonInterface;
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -9,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="fos_user")
  */
-class User extends BaseUser
+class User extends BaseUser implements PersonInterface
 {
     /**
      * @ORM\Id
