@@ -9,6 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\Table(name="fos_user")
+ *
+ * @author Titouan Galopin <galopintitouan@gmail.com>
  */
 class User extends BaseUser implements PersonInterface
 {

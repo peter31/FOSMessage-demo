@@ -22,3 +22,20 @@ services:
         arguments:
             - "@fos_message.driver"
             - "@fos_message.event_dispatcher"
+
+    app.form.data_trasnformer.recipients:
+        class: AppBundle\Form\DataTransformer\RecipientsTransformer
+        arguments:
+            - "@fos_user.user_to_username_transformer"
+
+    app.form.type.recipients:
+        class: AppBundle\Form\Type\RecipientsType
+        arguments:
+            - "@app.form.data_trasnformer.recipients"
+        tags:
+            - { name: "form.type" }
+
+    app.twig.extension.conversation_members:
+        class: AppBundle\Twig\ConversationMembersExtension
+        tags:
+            - { name: "twig.extension" }

@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Conversation with {{ members_list(conversation, app.user) }}{% endblock %}
+
+{% block body %}
+    <h3>
+        Conversation with {{ members_list(conversation, app.user) }}
+    </h3>
+
+    <p>
+        <a href="{{ path('messages_conversations') }}">Back to conversations</a>
+    </p>
+
+    {% if conversation.subject %}
+        <hr />
+        <h4>Subject: {{ conversation.subject }}</h4>
+    {% endif %}
+
+    {% for message in messages %}
+        <hr />
+
+        <p>
+            <strong>From</strong> : {{ message.sender.username }}<br />
+            <strong>Date</strong> : {{ message.date|date('m/d/Y h:ia') }}<br />
+        </p>
+        <p>
+            {{ message.body|nl2br }}
+        </p>
+    {% endfor %}
+{% endblock %}

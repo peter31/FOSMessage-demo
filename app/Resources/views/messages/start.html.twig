@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Start a conversation{% endblock %}
+
+{% block body %}
+    <h3>Start a conversation</h3>
+
+    <p>
+        <a href="{{ path('messages_conversations') }}">Back to conversations</a>
+    </p>
+
+    <hr />
+
+    <form method="post">
+        {{ form_rest(form) }}
+    </form>
+{% endblock %}

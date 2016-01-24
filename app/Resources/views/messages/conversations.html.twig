@@ -10,16 +10,26 @@
             <a href="{{ path('messages_start') }}">Start a conversation</a>
         </p>
 
-        <table>
+        <hr />
+
+        <table class="table">
             <thead>
             <tr>
                 <th>#</th>
+                <th>With</th>
+                <th>Subject</th>
             </tr>
             </thead>
             <tbody>
             {% for conversation in conversations %}
             <tr>
                 <td>{{ conversation.id }}</td>
+                <td>
+                    <a href="{{ path('messages_conversation', { 'id': conversation.id, 'page': 1 }) }}">
+                        {{ members_list(conversation, app.user) }}
+                    </a>
+                </td>
+                <td>{{ conversation.subject }}</td>
             </tr>
             {% endfor %}
             </tbody>
