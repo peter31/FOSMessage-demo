@@ -36,6 +36,6 @@ services:
             - { name: "form.type" }
 
     app.twig.extension.conversation_members:
-        class: AppBundle\Twig\ConversationMembersExtension
+        class: AppBundle\Twig\MessagesExtension
         tags:
             - { name: "twig.extension" }

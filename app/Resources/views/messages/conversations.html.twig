@@ -18,19 +18,38 @@
                 <th>#</th>
                 <th>With</th>
                 <th>Subject</th>
+                <th>Last message</th>
             </tr>
             </thead>
             <tbody>
             {% for conversation in conversations %}
-            <tr>
-                <td>{{ conversation.id }}</td>
-                <td>
-                    <a href="{{ path('messages_conversation', { 'id': conversation.id, 'page': 1 }) }}">
-                        {{ members_list(conversation, app.user) }}
-                    </a>
-                </td>
-                <td>{{ conversation.subject }}</td>
-            </tr>
+                {% set firstUnread = conversation.firstUnreadMessage(app.user) %}
+
+                <tr>
+                    <td>
+                        {{ conversation.id }}
+                    </td>
+                    <td>
+                        <a href="{{ path('messages_conversation', { 'id': conversation.id, 'page': 1 }) }}">
+                            {{ members_list(conversation, app.user) }}
+                        </a>
+                    </td>
+                    <td>
+                        {{ conversation.subject }}
+                    </td>
+                    <td>
+                        {% if firstUnread %}
+                            <a href="{{ path('messages_conversation', { 'id': conversation.id, 'page': get_message_page(conversation, firstUnread) }) }}">
+                                {{ firstUnread.id }}
+                            </a>
+                            <strong>(New)</strong>
+                        {% else %}
+                            <a href="{{ path('messages_conversation', { 'id': conversation.id, 'page': get_message_page(conversation, conversation.messages.last) }) }}">
+                                {{ conversation.messages.last.id }}
+                            </a>
+                        {% endif %}
+                    </td>
+                </tr>
             {% endfor %}
             </tbody>
         </table>

@@ -16,10 +16,28 @@
         <h4>Subject: {{ conversation.subject }}</h4>
     {% endif %}
 
+    <hr />
+
+    <p>
+        {{ total }} message(s) in this conversation | Page {{ page }} / {{ totalPages }}
+
+        {% if page > 1 %}
+            <a href="{{ path('messages_conversation', {'id': conversation.id, 'page': page - 1}) }}">
+                Previous
+            </a>
+        {% endif %}
+
+        {% if page < totalPages %}
+            <a href="{{ path('messages_conversation', {'id': conversation.id, 'page': page + 1}) }}">
+                Next
+            </a>
+        {% endif %}
+    </p>
+
     {% for message in messages %}
         <hr />
 
-        <p>
+        <p id="message-{{ message.id }}">
             <strong>From</strong> : {{ message.sender.username }}<br />
             <strong>Date</strong> : {{ message.date|date('m/d/Y h:ia') }}<br />
         </p>
@@ -27,4 +45,10 @@
             {{ message.body|nl2br }}
         </p>
     {% endfor %}
+
+    <hr />
+
+    <form method="post">
+        {{ form_rest(replyForm) }}
+    </form>
 {% endblock %}

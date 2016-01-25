@@ -11,12 +11,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * @author Titouan Galopin <galopintitouan@gmail.com>
  */
-class ReplyConversationType extends AbstractType
+class ReplyMessageType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('body', TextareaType::class)
+            ->add('body', TextareaType::class, [
+                'label' => 'Reply to this conversation'
+            ])
             ->add('save', SubmitType::class)
         ;
     }
@@ -24,7 +26,7 @@ class ReplyConversationType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'FOS\Message\Driver\Doctrine\ORM\Entity\Message',
+            'data_class' => 'AppBundle\Form\Model\ReplyMessageModel',
         ));
     }
 }
