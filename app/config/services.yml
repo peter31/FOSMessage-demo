@@ -37,5 +37,7 @@ services:
 
     app.twig.extension.conversation_members:
         class: AppBundle\Twig\MessagesExtension
+        arguments:
+            - "@fos_message.repository"
         tags:
             - { name: "twig.extension" }

@@ -32,7 +32,14 @@
                 <ul class="nav navbar-nav navbar-right">
                     {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                         <li>
-                            <a href="{{ path('messages_conversations') }}">Messages</a>
+                            <a href="{{ path('messages_conversations') }}">
+                                Messages
+                                {% set countUnread = count_unread_conversations(app.user) %}
+
+                                {% if countUnread > 0 %}
+                                    <strong>({{ countUnread }} new)</strong>
+                                {% endif %}
+                            </a>
                         </li>
                         <li>
                             <a href="{{ path('fos_user_security_logout') }}">

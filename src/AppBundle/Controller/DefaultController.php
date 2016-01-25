@@ -27,7 +27,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/messages", name="messages_conversations")
+     * @Route("/messages/conversations", name="messages_conversations")
      */
     public function conversationsAction()
     {
