@@ -15,10 +15,10 @@
         <table class="table">
             <thead>
             <tr>
-                <th>#</th>
+                <th style="width: 5%">#</th>
                 <th>With</th>
-                <th>Subject</th>
-                <th>Last message</th>
+                <th style="width: 15%">Last message</th>
+                <th style="width: 15%">Actions</th>
             </tr>
             </thead>
             <tbody>
@@ -31,22 +31,40 @@
                     </td>
                     <td>
                         <a href="{{ path('messages_conversation', { 'id': conversation.id, 'page': 1 }) }}">
-                            {{ members_list(conversation, app.user) }}
-                        </a>
-                    </td>
-                    <td>
-                        {{ conversation.subject }}
+                            {{ members_list(conversation, app.user) }}</a>
+                        {% if conversation.subject %}
+                            (Subject : {{ conversation.subject }})
+                        {% endif %}
                     </td>
                     <td>
                         {% if firstUnread %}
                             <a href="{{ path('messages_conversation', { 'id': conversation.id, 'page': get_message_page(conversation, firstUnread) }) }}">
-                                {{ firstUnread.id }}
+                                From {{ firstUnread.sender.username }}
+                                on {{ firstUnread.date|date('m/d/Y h:ia') }}
                             </a>
                             <strong>(New)</strong>
                         {% else %}
                             <a href="{{ path('messages_conversation', { 'id': conversation.id, 'page': get_message_page(conversation, conversation.messages.last) }) }}">
-                                {{ conversation.messages.last.id }}
+                                From {{ conversation.messages.last.sender.username }}
+                                on {{ conversation.messages.last.date|date('m/d/Y h:ia') }}
                             </a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if firstUnread %}
+                            <form method="post" action="{{ path('messages_conversation_set_read', {'id': conversation.id}) }}">
+                                <button type="submit" class="btn btn-sm btn-link">
+                                    Set as read
+                                </button>
+                                {{ form_rest(forms[conversation.id]) }}
+                            </form>
+                        {% else %}
+                            <form method="post" action="{{ path('messages_conversation_set_unread', {'id': conversation.id}) }}">
+                                <button type="submit" class="btn btn-sm btn-link">
+                                    Set as not read
+                                </button>
+                                {{ form_rest(forms[conversation.id]) }}
+                            </form>
                         {% endif %}
                     </td>
                 </tr>

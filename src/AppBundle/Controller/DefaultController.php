@@ -4,9 +4,12 @@ namespace AppBundle\Controller;
 
 use AppBundle\Form\Model\ReplyMessageModel;
 use AppBundle\Form\Model\StartConversationModel;
+use AppBundle\Form\Type\EmptyType;
 use AppBundle\Form\Type\ReplyMessageType;
 use AppBundle\Form\Type\StartConversationType;
+use FOS\Message\Driver\Doctrine\ORM\Entity\Conversation;
 use FOS\Message\Model\MessageInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class DefaultController extends Controller
 {
-    const MESSAGES_PER_PAGE = 2;
+    const MESSAGES_PER_PAGE = 5;
 
     /**
      * @Route("/", name="homepage")
@@ -31,10 +34,17 @@ class DefaultController extends Controller
      */
     public function conversationsAction()
     {
+        /** @var Conversation[] $conversations */
         $conversations = $this->get('fos_message.repository')->getPersonConversations($this->getUser());
+        $forms = [];
+
+        foreach ($conversations as $conversation) {
+            $forms[$conversation->getId()] = $this->createForm(EmptyType::class)->createView();
+        }
 
         return $this->render('messages/conversations.html.twig', [
             'conversations' => $conversations,
+            'forms' => $forms,
         ]);
     }
 
@@ -68,7 +78,11 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/messages/{id}/{page}", name="messages_conversation")
+     * @Route(
+     *     "/messages/{id}/{page}",
+     *     requirements={"id"="\d+", "page"="\d+"},
+     *     name="messages_conversation"
+     * )
      */
     public function conversationAction(Request $request, $id, $page)
     {
@@ -144,5 +158,61 @@ class DefaultController extends Controller
             'page' => $page,
             'replyForm' => $replyForm->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/messages/{id}/set-read", name="messages_conversation_set_read")
+     * @Method("POST")
+     */
+    public function setReadAction(Request $request, $id)
+    {
+        $form = $this->createForm(EmptyType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $manager = $this->getDoctrine()->getManager();
+            $conversation = $this->get('fos_message.repository')->getConversation($id);
+
+            foreach ($conversation->getMessages() as $message) {
+                $messagePerson = $message->getMessagePerson($this->getUser());
+
+                if (! $messagePerson->isRead()) {
+                    $messagePerson->setRead();
+                    $manager->persist($messagePerson);
+                }
+            }
+
+            $manager->flush();
+        }
+
+        return $this->redirectToRoute('messages_conversations');
+    }
+
+    /**
+     * @Route("/messages/{id}/set-unread", name="messages_conversation_set_unread")
+     * @Method("POST")
+     */
+    public function setUnreadAction(Request $request, $id)
+    {
+        $form = $this->createForm(EmptyType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $manager = $this->getDoctrine()->getManager();
+            $conversation = $this->get('fos_message.repository')->getConversation($id);
+
+            foreach ($conversation->getMessages() as $message) {
+                $messagePerson = $message->getMessagePerson($this->getUser());
+
+                if ($messagePerson->isRead()) {
+                    $messagePerson->setNotRead();
+                    $manager->persist($messagePerson);
+                }
+            }
+
+            $manager->flush();
+        }
+
+        return $this->redirectToRoute('messages_conversations');
     }
 }
